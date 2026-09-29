@@ -1,0 +1,54 @@
+BREWMETRICS DAX FORMULAE
+
+Total Sales =
+SUM(Fact_Sales[sales_amount])
+
+Total Quantity =
+SUM(Fact_Sales[quantity])
+
+Transaction Count =
+DISTINCTCOUNT(Fact_Sales[sale_id])
+
+Average Transaction Value =
+DIVIDE(
+    [Total Sales],
+    [Transaction Count]
+)
+
+Previous Month Sales =
+CALCULATE(
+    [Total Sales],
+    DATEADD(
+        Dim_Date[Date],
+        -1,
+        MONTH
+    )
+)
+
+MoM Growth % =
+IF(
+    HASONEVALUE(Dim_Date[Month]),
+    DIVIDE(
+        [Total Sales] - [Previous Month Sales],
+        [Previous Month Sales]
+    ),
+    BLANK()
+)
+
+Running Total Sales =
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        ALLSELECTED(Dim_Date[Date]),
+        Dim_Date[Date] <= MAX(Dim_Date[Date])
+    )
+)
+
+City Rank =
+RANKX(
+    ALLSELECTED(Dim_City[City]),
+    CALCULATE([Total Sales]),
+    ,
+    DESC,
+    DENSE
+)
