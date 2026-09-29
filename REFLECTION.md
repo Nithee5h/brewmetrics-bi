@@ -1,0 +1,5 @@
+# Reflection
+
+GitHub Copilot was most useful for generating the first version of common DAX patterns and giving me a structured starting point. It was especially helpful for the running-total calculation and the average transaction value measure, where the suggested logic was directly usable after validation. It also helped speed up the initial implementation of the month-over-month and city-ranking measures.
+
+However, Copilot still required careful validation in the actual Power BI filter context. The clearest example was the City Rank measure. The first version used `RANKX`, but every city displayed rank 1. I corrected this by evaluating `[Total Sales]` inside `CALCULATE()` during the `RANKX` iteration. I also improved the month-over-month measure by adding `HASONEVALUE` so that the KPI returns a value only when a single month is selected. I separated the work into data-model changes, DAX measures, dashboard development, and documentation. This made the development process easier to trace and explain compared with treating the Power BI report as one final file.
